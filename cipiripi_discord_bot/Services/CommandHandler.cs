@@ -80,14 +80,12 @@ namespace cipiripi_discord_bot.Services
                 return;
             }
 
-
             // log success to the console and exit this method
             if (result.IsSuccess)
             {
                 System.Console.WriteLine($"Command [{command.Value.Name}] executed for -> [{context.User.Username}]");
                 return;
             }
-
 
             // failure scenario, let's let the user know
             await context.Channel.SendMessageAsync($"Sorry, {context.User.Username}... something went wrong -> [{result}]!");

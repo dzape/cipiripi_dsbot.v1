@@ -8,6 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
+using cipiripi_discord_bot.Data;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using System.Net.Http;
 
 namespace cipiripi_discord_bot.Modules
 {
@@ -45,94 +49,15 @@ namespace cipiripi_discord_bot.Modules
             // build out the reply
             embed.WithColor(new Color(0, 255, 0));
             sb.AppendLine($"Hmmm how can i say this to u [{user.Username}] i am bot who can read and write a lot of ones and zeros ^^. My name is [{client.CurrentUser}] ");
-            sb.AppendLine("Stay AWESOME !");
 
             // send simple string reply
             await ReplyAsync(sb.ToString());
         }
 
-        //[Command("cipiripi")]
-        //[Alias("ask")]
-        //[RequireUserPermission(GuildPermission.KickMembers)]
-        //public async Task AskCipiripi([Remainder]string args = null)
-        //{
-        //    // I like using StringBuilder to build out the reply
-        //    var sb = new StringBuilder();
-        //    // let's use an embed for this one!
-        //    var embed = new EmbedBuilder();
-
-        //    // now to create a list of possible replies
-        //    var replies = new List<string>();
-
-        //    // add our possible replies
-        //    replies.Add("yes");
-        //    replies.Add("no");
-        //    replies.Add("maybe");
-        //    replies.Add("hazzzzy....");
-
-        //    // time to add some options to the embed (like color and title)
-        //    embed.WithColor(new Color(0, 255, 0));
-        //    embed.Title = "Welcome to the amg !";
-
-        //    // we can get lots of information from the Context that is passed into the commands
-        //    // here I'm setting up the preface with the user's name and a comma
-        //    sb.AppendLine($"{Context.User.Username},");
-        //    sb.AppendLine();
-
-        //    // let's make sure the supplied question isn't null 
-        //    if (args == null)
-        //    {
-        //        // if no question is asked (args are null), reply with the below text
-        //        sb.AppendLine("Sorry, can't answer a question you didn't ask!");
-        //    }
-        //    else
-        //    {
-        //        // if we have a question, let's give an answer!
-        //        // get a random number to index our list with (arrays start at zero so we subtract 1 from the count)
-        //        var answer = replies[new Random().Next(replies.Count - 1)];
-
-        //        // build out our reply with the handy StringBuilder
-        //        sb.AppendLine($"You asked: [**{args}**]...");
-        //        sb.AppendLine();
-        //        sb.AppendLine($"...your answer is [**{answer}**]");
-
-        //        // bonus - let's switch out the reply and change the color based on it
-        //        switch (answer)
-        //        {
-        //            case "yes":
-        //                {
-        //                    embed.WithColor(new Color(0, 255, 0));
-        //                    break;
-        //                }
-        //            case "no":
-        //                {
-        //                    embed.WithColor(new Color(255, 0, 0));
-        //                    break;
-        //                }
-        //            case "maybe":
-        //                {
-        //                    embed.WithColor(new Color(255, 255, 0));
-        //                    break;
-        //                }
-        //            case "hazzzzy....":
-        //                {
-        //                    embed.WithColor(new Color(255, 0, 255));
-        //                    break;
-        //                }
-        //        }
-        //    }
-
-        //    // now we can assign the description of the embed to the contents of the StringBuilder we created
-        //    embed.Description = sb.ToString();
-
-        //    // this will reply with the embed
-        //    await ReplyAsync(null, false, embed.Build());
-        //}
-
-        [Command("wtp")] // what to play
+        [Command("cipiripi")]
         [Alias("ask")]
         [RequireUserPermission(GuildPermission.KickMembers)]
-        public async Task AskForGmameCipiripi([Remainder]string args = null)
+        public async Task AskCipiripi([Remainder]string args = null)
         {
             // I like using StringBuilder to build out the reply
             var sb = new StringBuilder();
@@ -144,11 +69,13 @@ namespace cipiripi_discord_bot.Modules
 
             // add our possible replies
             replies.Add("CSGO");
-            replies.Add("DOTA");
+            replies.Add("GTA5");
+            replies.Add("LEAGUE OF LEGENDS");
             replies.Add("VALORANT");
-            replies.Add("League of Legends");
-            replies.Add("TicTacToe") ;
 
+            // time to add some options to the embed (like color and title)
+            embed.WithColor(new Color(0, 255, 0));
+            embed.Title = "Welcome to the amg !";
 
             // we can get lots of information from the Context that is passed into the commands
             // here I'm setting up the preface with the user's name and a comma
@@ -168,7 +95,9 @@ namespace cipiripi_discord_bot.Modules
                 var answer = replies[new Random().Next(replies.Count - 1)];
 
                 // build out our reply with the handy StringBuilder
-                sb.AppendLine($"...you should play [**{answer}**]");
+                sb.AppendLine($"You asked: [**{args}**]...");
+                sb.AppendLine();
+                sb.AppendLine($"...your answer is [**{answer}**]");
 
                 // bonus - let's switch out the reply and change the color based on it
                 switch (answer)
@@ -178,24 +107,19 @@ namespace cipiripi_discord_bot.Modules
                             embed.WithColor(new Color(0, 255, 0));
                             break;
                         }
-                    case "DOTA":
+                    case "GTA5":
                         {
                             embed.WithColor(new Color(255, 0, 0));
                             break;
                         }
-                    case "VALORANT":
+                    case "LEAGUE OF LEGENDS":
                         {
                             embed.WithColor(new Color(255, 255, 0));
                             break;
                         }
-                    case "League of Legends":
+                    case "VALORANT":
                         {
                             embed.WithColor(new Color(255, 0, 255));
-                            break;
-                        }
-                    case "TicTacToe":
-                        {
-                            embed.WithColor(new Color(0, 255, 255));
                             break;
                         }
                 }
@@ -208,5 +132,43 @@ namespace cipiripi_discord_bot.Modules
             await ReplyAsync(null, false, embed.Build());
         }
 
+        [Command("wtp")] // what to play
+        [RequireUserPermission(GuildPermission.KickMembers)]
+        public async Task AskForGmameCipiripi()
+        {
+            //Select random game from json and output title and genres.
+            string json = "https://static.nvidiagrid.net/supported-public-game-list/gfnpc.json?JSON";
+
+            HttpClient client = new HttpClient();
+
+            var result = await client.GetAsync(json);
+
+            var str = await result.Content.ReadAsStringAsync();
+
+            var obj = JsonConvert.DeserializeObject<List<GamesData>>(str);
+
+            Random rnd = new Random();
+            GamesData item = obj[rnd.Next(0, obj.Count)];
+
+            // I like using StringBuilder to build out the reply
+            var sb = new StringBuilder();
+            // let's use an embed for this one!
+            var embed = new EmbedBuilder();
+
+            // we can get lots of information from the Context that is passed into the commands
+            // here I'm setting up the preface with the user's name and a comma
+            sb.AppendLine($"{Context.User.Username},");
+            sb.AppendLine();
+
+            // build out our reply with the handy StringBuilder
+            embed.WithColor(new Color(0, 255, 0));
+            sb.AppendLine($"...you should play [**{item.ToString()}**]");
+
+            // now we can assign the description of the embed to the contents of the StringBuilder we created
+            embed.Description = sb.ToString();
+
+            // this will reply with the embed
+            await ReplyAsync(null, false, embed.Build());
+        }
     }
 }

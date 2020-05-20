@@ -9,8 +9,10 @@ using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
 using cipiripi_discord_bot.Services;
 using cipiripi_discord_bot.Services;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
-namespace csharpi
+namespace cipiripi_discord_bot
 {
     class Program
     {
@@ -68,7 +70,7 @@ namespace csharpi
 
         private Task ReadyAsync()
         {
-            Console.WriteLine($"Connected as -> [{_client.CurrentUser}] :)");
+            Console.WriteLine($"Connected as : [{_client.CurrentUser}] ^^");
             return Task.CompletedTask;
         }
 
